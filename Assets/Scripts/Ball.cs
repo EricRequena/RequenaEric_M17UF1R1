@@ -6,7 +6,7 @@ public class NewBehaviourScript : MonoBehaviour
 {
     private Rigidbody2D _rb;
     public float _speed = -1f;
-    public float destroyTime = 3f; // Tiempo en segundos antes de destruir el objeto
+    public float destroyTime = 3f; // Tiempo en segundos antes de destruir el objetos
 
     void Start()
     {

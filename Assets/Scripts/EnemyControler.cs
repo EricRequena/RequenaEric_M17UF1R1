@@ -1,14 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
     // VARIABLES
-    public float speed; // Velocidad de movimiento del enemigo
+    public float speed; 
     public float minX; // Coordenada x mínima
     public float maxX; // Coordenada x máxima
+    public float pauseDuration = 1f; // Duración de la pausa en cada extremo
     private Vector3 direction; // Dirección de movimiento
+    private bool isPaused = false; // Estado de pausa
 
     void Start()
     {
@@ -18,20 +19,34 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        // Calcula la nueva posición del enemigo
-        float newPositionX = transform.position.x + direction.x * speed * Time.deltaTime;
 
-        // Verifica si ha alcanzado los límites
-        if (newPositionX <= minX || newPositionX >= maxX)
+        if (!isPaused)
         {
-            // Cambia la dirección si se alcanza el límite
-            direction = -direction;
-            Vector3 theScale = transform.localScale;
-            theScale.x *= -1;
-            transform.localScale = theScale;
-        }
+ 
+            float newPositionX = transform.position.x + direction.x * speed * Time.deltaTime;
 
-        // Mueve el enemigo a la nueva posición
-        transform.position += direction * speed * Time.deltaTime;
+    
+            if (newPositionX <= minX || newPositionX >= maxX)
+            {
+                // Cambia la dirección si se alcanza el límite
+                direction = -direction;
+                Vector3 theScale = transform.localScale;
+                theScale.x *= -1;
+                transform.localScale = theScale;
+
+                // Inicia la pausa en el movimiento
+                StartCoroutine(PauseMovement());
+            }
+
+            // Mueve el enemigo a la nueva posición
+            transform.position += direction * speed * Time.deltaTime;
+        }
+    }
+
+    private IEnumerator PauseMovement()
+    {
+        isPaused = true; // Activa la pausa
+        yield return new WaitForSeconds(pauseDuration); // Espera la duración de la pausa
+        isPaused = false; // Desactiva la pausa
     }
 }
